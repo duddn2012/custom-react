@@ -30,6 +30,8 @@ const v2 =new MyComp ();
 2. life cycle
 3. state
 4. hook
+
+
 */
 function Component(elementName, parentElement) {
   const vdom = VirtualDom.getInstance();
