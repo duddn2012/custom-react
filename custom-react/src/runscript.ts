@@ -1,16 +1,36 @@
-import VirtualDom from "./VirtualDom.ts";
-// Virtual DOM은 런타임 메모리로서 존재하며 컴포넌트와 Virtual DOM Tree를 관리한다.
-const vdom: VirtualDom = VirtualDom.getInstance();
+/*
+1. 선언형
+2. 컴포넌트 기반 계층 구조
+3. 단방향
+*/
 
-//Input Component 세팅
-//React.createElement(MyCompo, null); => 영우.createElement(MyCompo, null);
-//DOM 파싱을 구현하려면 모든 event, 고정 props 등을 등록해야하므로 구현은 힘들듯?
-//React는 Babel에 추가되어 있음.
-const inputComp = Component("input");
-const inputComp2 = Component("input");
-const inputComp3 = Component("input");
-const inputComp4 = Component("input");
-const button = Component("button");
+import Component from "./Component.ts";
+import VirtualDom from "./VirtualDom.ts";
+
+const vdom = VirtualDom.getInstance();
+
+const v1 = new ParentComp();
+const v2 = new MyComp ();
+const v4 = new MyComp ();
+
+//부모 자식 관계 
+v1.registChild(v2);
+
+//커스텀 컴포넌트 예시
+class MyComp extends Component {
+    //`~~
+
+    return (
+        new Input({value="", id="", });
+        new Input({value="", id="", });
+        new Input({value="", id="", });
+        new Input({value="", id="", });
+    );
+
+}
+
+//내장 HTML 태그 API
+const v3 = new Input({value="", id="", });
 
 vdom.print();
 
