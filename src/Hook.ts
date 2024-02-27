@@ -23,10 +23,7 @@ Hook?
 
  7. Other Hooks
 */
-function useState(component, initialState) {
-  if (!exists) this._state = invaild;
-  const state = this._state;
-  return [state, this.setState];
+function useState() {
 }
 
 function useLayoutEffect() {}
