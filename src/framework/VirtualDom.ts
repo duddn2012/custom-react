@@ -1,6 +1,9 @@
 // Control Virtual DOM
 // Virtual DOM 트리와 Component 관계를 동일한 tree 구조로 표현함.
 
+import Component from "./Component";
+import { KoactNode } from "./Koact";
+
 // <Component register>
 // 1. Component register 단계 : component 트리에 등록 및 Virtual DOM이 Component에 대한 관리 시작
 // 2. V-DOM Update 단계: Virtual DOM Tree에 해당 컴포넌트 등록
@@ -34,19 +37,10 @@ export default class VirtualDom{
     private static instance: VirtualDom;
     private vdomTree: VdomNode[] = [];
     private componentTree: ComponentNode[] = [];
-    private observers: (VdomComponent)[] = [];
-
-    addObserver(observer: VdomComponent){
-        this.observers.push(observer);
-        this.notifyObserver(observer);
-    }
-
-    notifyObserver(component: VdomComponent) {
-        this.register(component);
-    }
+    private observers: (VdomComponent)[] = [];    
 
     private constructor() {
-        this.registerRoot(document.getElementById("root")!);
+        this.createRoot(document.getElementById("root")!);
         VirtualDom.instance = this;
     } 
 
@@ -54,28 +48,32 @@ export default class VirtualDom{
         return VirtualDom.instance || new VirtualDom();
     }
 
-    register<T extends VdomComponent>(component: T, parentComponent?: VdomComponent) {        
-        if(!parentComponent) parentComponent = this.getRoot();
-
-        const parentComponentNode = this.componentTree.find((cn) => cn.component.element === parentComponent?.element);
-        parentComponentNode?.childs.push(component);
-        this.componentTree.push({component, states:[], childs: []});
-        if(!component.element || !parentComponent?.element) return;
-        this.updateVdom(component.element, parentComponent?.element);
+    addObserver(observer: VdomComponent){
+        this.observers.push(observer);
+        //this.render(observer);    //TODO observer도 구현하자
     }
 
-    updateVdom(domElement: HTMLElement, parentElement: HTMLElement) {
-        const parentVdom = this.vdomTree.find((vde) => vde.vdom === parentElement);
-        parentVdom?.child.push(domElement);
-        this.vdomTree.push({vdom: domElement, child: []});
-
-        parentElement.insertAdjacentElement("afterbegin",domElement);
+    
+    render(children: KoactNode<(HTMLElement)>) {   
+        this.getRoot().element.insertAdjacentElement("afterbegin", children.type);
+        this.updateVdom(children);
     }
 
-    private registerRoot(rt: HTMLElement) {        
+    updateVdom(children: KoactNode<HTMLElement>) {
+            children.child.forEach(element=>{
+                children.type.insertAdjacentElement("afterbegin", element); //TODO 현재 바로 commit => 추후 수정해야함
+            });  
+    }
+
+    commit() {
+        //diff Component 내용을 real DOM에 적용
+    }
+
+    createRoot(rt: HTMLElement) {        
         const comp = {element: rt};
         this.vdomTree.push({ vdom: rt, child: [] });
         this.componentTree.push({ component: comp, states: [], childs: [] });
+        return this;
     }
 
     private getRoot() {

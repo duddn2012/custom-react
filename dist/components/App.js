@@ -23,14 +23,34 @@ var __extends =
       d.prototype = b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
     };
   })();
-import Component from "./Component.js";
-var IntrinsicElement = /** @class */ (function (_super) {
-  __extends(IntrinsicElement, _super);
-  function IntrinsicElement(elementName, value) {
-    var element = document.createElement(elementName);
-    if (value) element.innerHTML = value;
-    return _super.call(this, element) || this;
+import Component from "../framework/Component.js";
+import IntrinsicElements from "../framework/IntrinsicElements.js";
+var App = /** @class */ (function (_super) {
+  __extends(App, _super);
+  function App() {
+    return _super.call(this) || this;
   }
-  return IntrinsicElement;
+  App.prototype.render = function () {
+    var h1 = new IntrinsicElements("h1", {
+      value: "test",
+      onclick: function () {
+        console.log(1);
+      },
+    });
+    var btn = new IntrinsicElements("button", {
+      value: "test",
+      onclick: function () {
+        console.log(2);
+      },
+    });
+    var btn2 = new IntrinsicElements("button", {
+      value: "test",
+      onclick: function () {
+        console.log(3);
+      },
+    });
+    return { type: h1.htmlElement, child: [btn.htmlElement, btn2.htmlElement] };
+  };
+  return App;
 })(Component);
-export default IntrinsicElement;
+export { App };

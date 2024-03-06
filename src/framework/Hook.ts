@@ -1,3 +1,6 @@
+import Component from "./Component";
+import { vdom } from "./VirtualDom";
+
 /*
 Hook?
 함수 컴포넌트에서 React의 기능을 활용할 수 있는 함수.
@@ -23,9 +26,20 @@ Hook?
 
  7. Other Hooks
 */
-function useState() {
+type ExtractReturnType<T> = T extends (...args: any[]) => T ? (...args: any[]) => T : T;
+
+export function useState<S>(component: Component, initialState?: ExtractReturnType<S>) {
+    let stateValue = typeof initialState === 'function' ? (initialState as () => S)() : initialState;
+
+    const setState =(value: typeof initialState) => {
+        stateValue = value;
+        //vdom.render({element: component});
+    }
+    return [stateValue, setState] as const;
 }
-function useLayoutEffect() { }
-function useEffect() { }
+
+function useLayoutEffect() {}
+function useEffect() {}
+
 // 함수를 메모이제이션 하므로 내부에서 사용하는 변수들의 메모리 주소들이 고정되어 있어 의존성 배열에 변수를 지정해두지 않으면 오동작이 발생할 수 있다.
-function useCallback() { }
+function useCallback() {}
